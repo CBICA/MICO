@@ -373,7 +373,7 @@ ImageMapVector tc_update_membership(const ImageVector& images,
             if      (k == 0) M = memberships[i]["CSF"]->img.fl;
             else if (k == 1) M = memberships[i]["GM"] ->img.fl;
             else if (k == 2) M = memberships[i]["WM"] ->img.fl;
-            assert (M != NULL);
+            // assert (M != NULL);
             for (int j = 0; j < total; j++) {
                 if (result_ser[i][j] != 0) {
                     M[j] = f[k * total + j] / f_sum[j];
