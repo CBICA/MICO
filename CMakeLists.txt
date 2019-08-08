@@ -78,6 +78,7 @@ IF(NOT EXISTS "${PROJECT_BINARY_DIR}/ep/share/pkgconfig/zlib.pc")
  RETURN()
 ENDIF()
 
+# at this point, the dependencies are ready
 
 ADD_LIBRARY(micolib STATIC utilities.cxx cross-sectional.cxx longitudinal.cxx io.cxx)
 SET_TARGET_PROPERTIES(micolib PROPERTIES OUTPUT_NAME mico)
