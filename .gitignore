@@ -1,0 +1,6 @@
+# Binaries, binary folders
+
+binaries_*
+
+bin
+build
