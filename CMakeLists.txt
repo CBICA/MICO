@@ -12,6 +12,16 @@
 # minimum required CMake version
 cmake_minimum_required (VERSION 2.8.4)
 
+IF(NOT EXISTS "${PROJECT_BINARY_DIR}/thirdparty/zlib")
+  ADD_SUBDIRECTORY(thirdparty/zlib)
+  RETURN()
+ENDIF()
+IF(NOT EXISTS "${PROJECT_BINARY_DIR}/thirdparty/zlib")
+SET( ENV{CMAKE_PREFIX_PATH} "${PROJECT_BINARY_DIR}/thirdparty/zlib" CACHE PATH "" FORCE )
+add_subdirectory(thirdparty/nifticlib)
+return()
+
+SET( ENV{CMAKE_PREFIX_PATH} "${PROJECT_BINARY_DIR}/thirdparty/zlib;${PROJECT_BINARY_DIR}/thirdparty/nifticlib" CACHE PATH "" FORCE )
 # superbuild
 IF( NOT EXISTS ${PROJECT_BINARY_DIR}/ITK-build/ITKConfig.cmake )
 
