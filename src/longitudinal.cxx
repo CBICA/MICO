@@ -244,8 +244,13 @@ ImageMapVector tc_update_membership(const ImageVector& images,
 
     const int number_of_images = static_cast<int>(images.size());
 
-    assert(number_of_images > 0);
-    assert(result_ser != NULL);
+  if (number_of_images <= 0)
+  {
+    std::cerr << "Number of images is less than or equal to 0, something went wrong.\n";
+    exit(EXIT_FAILURE);
+  }
+  
+    // assert(result_ser != NULL);
 
     const int width  = images[0]->hdr.dim[1];
     const int height = images[0]->hdr.dim[2];
@@ -267,9 +272,15 @@ ImageMapVector tc_update_membership(const ImageVector& images,
     if (ok) {
         float* img;
         float* result;
-        for (int i = 0; i < number_of_images; i++) {
-            assert(images[i]->hdr.datatype == DT_FLOAT);
-            assert(result_ser[i] != NULL);
+        for (int i = 0; i < number_of_images; i++) 
+        {
+          
+          if (images[i]->hdr.datatype != DT_FLOAT)
+          {
+            std::cerr << "Data type is not float.\n";
+            exit(EXIT_FAILURE);
+          }
+            // assert(result_ser[i] != NULL);
             float* Rs_i = Rs[i];
             // CSF
             img    = images[i]->img.fl;
