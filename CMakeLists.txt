@@ -14,11 +14,29 @@ cmake_minimum_required (VERSION 2.8.4)
 
 PROJECT( MICO )
 
+SET(CMAKE_CONFIGURATION_TYPES "Release" CACHE STRING "Default configuration types" FORCE)
+
 PROJECT(${PROJECT_NAME}_Depends)
-INCLUDE( ExternalProject )
+IF(NOT EXISTS "${PROJECT_BINARY_DIR}/thirdparty/zlib/ep/share/pkgconfig/zlib.pc")
+ PROJECT(${PROJECT_NAME}_ZLIB)
+ MESSAGE(STATUS "Starting ZLib compilation")
+ ADD_SUBDIRECTORY(thirdparty/zlib)
+ RETURN()
+ENDIF()
+
+SET(ZLIB_INCLUDE_DIR "${PROJECT_BINARY_DIR}/thirdparty/zlib/ep/include" CACHE STRING "ZLIB incude dir" FORCE)
+IF(MSVC)
+  SET(ZLIB_LIBRARY "${PROJECT_BINARY_DIR}/thirdparty/zlib/ep/lib/zlibstatic.lib" CACHE STRING "ZLIB location" FORCE)
+ELSE()
+  SET(ZLIB_LIBRARY "${PROJECT_BINARY_DIR}/zlib_build/zlibstatic.a" CACHE STRING "ZLIB location" FORCE)
+ENDIF()
+
+SET( CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/ep CACHE PATH "Changed the default install path" FORCE )
+
+INCLUDE(ExternalProject)
 ExternalProject_Add( 
-  ZLIB
-  DEPENDS ""
+  NIFTICLIB
+  #DEPENDS ZLIB
   UPDATE_COMMAND ""
   PATCH_COMMAND ""
   SOURCE_DIR ${PROJECT_SOURCE_DIR}/thirdparty/nifticlib
@@ -32,32 +50,10 @@ ExternalProject_Add(
     -DCMAKE_DEBUG_POSTFIX:STRING=d
     -DBUILD_TESTING:BOOL=OFF # testing the ITK build is not required
     -DCMAKE_INSTALL_PREFIX:PATH=${PROJECT_BINARY_DIR}/ep
+    -DZLIB_LIBRARY=${ZLIB_LIBRARY}
+    -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
 )
 
-ExternalProject_Add( 
-  NIFTICLIB
-  DEPENDS ZLIB
-  UPDATE_COMMAND ""
-  PATCH_COMMAND ""
-  SOURCE_DIR ${PROJECT_SOURCE_DIR}/thirdparty/zlib
-  BINARY_DIR zlib_build
-  UPDATE_COMMAND ""
-  PATCH_COMMAND ""
-  INSTALL_COMMAND ""
-  CMAKE_GENERATOR ${gen}
-  CMAKE_ARGS
-    ${ep_common_args}   
-    -DCMAKE_DEBUG_POSTFIX:STRING=d
-    -DBUILD_TESTING:BOOL=OFF # testing the ITK build is not required
-    -DCMAKE_INSTALL_PREFIX:PATH=${PROJECT_BINARY_DIR}/ep
-)
-
-#IF(NOT EXISTS "${PROJECT_BINARY_DIR}/thirdparty/zlib/zconf.h")
-#  PROJECT(${PROJECT_NAME}_ZLIB)
-#  MESSAGE(STATUS "Starting ZLib compilation")
-#  ADD_SUBDIRECTORY(thirdparty/zlib)
-#  RETURN()
-#ENDIF()
 #IF(NOT EXISTS "${PROJECT_BINARY_DIR}/thirdparty/nifticlib")
 #  PROJECT(${PROJECT_NAME}_NIFTI)
 #  MESSAGE(STATUS "Starting NIfTICLib compilation")

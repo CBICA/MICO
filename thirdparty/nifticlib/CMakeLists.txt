@@ -67,6 +67,8 @@ ELSE("${ITK_VERSION_MAJOR}" GREATER 0.0)
   SET(NIFTI_INSTALL_NO_DEVELOPMENT 0)
   SET(NIFTI_INSTALL_NO_LIBRARIES 0)
 
+  INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
+
   #Needs an if clause and more work before testing can take place.
   #SUBDIRS(Testing)
   SUBDIRS(nifticdf utils)
