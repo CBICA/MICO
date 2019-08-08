@@ -238,7 +238,7 @@ void copy_image_data(Image*             image_out,
                                lmin, lmax, slope, inter);
                 break;
             default:
-                ASSERT(false, "Invalid image datatype: " << image_in->hdr.datatype);
+              std::cerr << "Invalid image datatype: " << image_in->hdr.datatype;
                 abort();
         }
     }
@@ -260,7 +260,7 @@ void copy_image_data(Image*             image_out,
                                 slope, inter);
             break;
         default:
-            ASSERT(false, "Invalid image datatype: " << image_in->hdr.datatype);
+            std::cerr << "Invalid image datatype: " << image_in->hdr.datatype);
             abort();
     }
     // set scl_slope and scl_inter of output image
@@ -548,7 +548,12 @@ nifti_image* convert_to_nifti(Image* image, const char* fname, bool copy)
     niftiexts.insert(".nii.gz");
     niftiexts.insert(".nia");
     niftiexts.insert(".nia.gz");
-    if (os::path::hasext(nim->fname, &analyzeexts) && image->nifti_type == NIFTI_FTYPE_ANALYZE) {
+    auto it = analyzeexts.find(cbica::getFilenameExtension(nim->fname));
+    if (it != analyzeexts.end())
+    {
+      std::cout << "'at' found in set" << std::endl;
+    }
+    if ((it != analyzeexts.end()) && image->nifti_type == NIFTI_FTYPE_ANALYZE) {
         nim->nifti_type = NIFTI_FTYPE_ANALYZE;
     }
     // set image data of NIfTI image
@@ -675,8 +680,7 @@ void get_intensity_range(const Image* image, float& min, float& max, bool scale)
                         min, max);
             break;
         default:
-            BASIS_THROW(invalid_argument,
-                    "Invalid image datatype: " << image->hdr.datatype);
+          std::cout << "Invalid image datatype: " << image->hdr.datatype;
     }
     if (scale && image->hdr.scl_slope != 0) {
         min = min * image->hdr.scl_slope + image->hdr.scl_inter;
