@@ -17,6 +17,7 @@
 
 #include "mico/io.h"
 
+#include "cbicaUtilities.h"
 
 // acceptable in .cxx file
 using namespace std;
@@ -104,7 +105,7 @@ int read_image_file_names(const char* listfile, char*** filenames)
     if (fp == NULL) return -1; // indicates list file open error
 
     // directory of list file
-    string root    = os::path::dirname(listfile);
+    string root = cbica::getFilenamePath(listfile);
     int    lenroot = static_cast<int>(root.size());
 
     // read list line by line
@@ -133,7 +134,7 @@ int read_image_file_names(const char* listfile, char*** filenames)
         }
         hname[hlen] = '\0';
         // normalize file path
-        string tmp = os::path::normpath(hname);
+        string tmp = cbica::normPath(hname);
         strncpy(hname, tmp.c_str(), hlen);
         // add file name to output list
         (*filenames)[n] = hname;
