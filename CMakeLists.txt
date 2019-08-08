@@ -16,6 +16,9 @@ PROJECT( MICO )
 
 SET(CMAKE_CONFIGURATION_TYPES "Release" CACHE STRING "Default configuration types" FORCE)
 
+SET(CMAKE_CXX_STANDARD 11 CACHE STRING "C++ standard to be used" )
+SET(CMAKE_CXX_STANDARD_REQUIRED YES) 
+
 IF(NOT EXISTS "${PROJECT_BINARY_DIR}/ep/share/pkgconfig/zlib.pc")
 
   PROJECT(${PROJECT_NAME}_Depends)
