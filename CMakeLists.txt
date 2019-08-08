@@ -49,7 +49,7 @@ IF(NOT EXISTS "${PROJECT_BINARY_DIR}/ep/share/pkgconfig/zlib.pc")
   SET(ZLIB_INCLUDE_DIR "${PROJECT_BINARY_DIR}/ep/include" CACHE STRING "ZLIB incude dir" FORCE)
   IF(MSVC)
     SET(ZLIB_LIBRARY "${PROJECT_BINARY_DIR}/ep/lib/zlibstatic.lib" CACHE STRING "ZLIB location" FORCE)
-  ELSEIF(LINUX)
+  ELSEIF(NOT APPLE)
     SET(ZLIB_LIBRARY "${PROJECT_BINARY_DIR}/ep/lib/zlibstatic.a" CACHE STRING "ZLIB location" FORCE)
   ELSE() # Apple has not been implemented/tested
     MESSAGE(FATAL "macOS has not been implemented or tested. Please use either a Windows/Linux machine")
