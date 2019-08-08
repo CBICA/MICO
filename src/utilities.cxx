@@ -13,17 +13,18 @@
 #include <math.h>
 #include <nifti1_io.h>
 #include <limits>
+#include <set>
 
-#include <basis/assert.h> // assert(), ASSERT()
-#include <basis/except.h> // BASIS_THROW(), std::invalid_argument
-#include <basis/os.h>     // hasext()
+// #include <basis/assert.h> // assert(), ASSERT()
+// #include <basis/except.h> // BASIS_THROW(), std::invalid_argument
+// #include <basis/os.h>     // hasext()
 
-#include <mico/utilities.h>
+#include "mico/utilities.h"
 
 
 // acceptable in .cxx file
 using namespace std;
-using namespace basis;
+//using namespace basis;
 
 
 namespace mico {
