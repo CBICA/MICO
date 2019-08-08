@@ -12,6 +12,7 @@
 #ifndef _MICO_UTILITIES_H
 #define _MICO_UTILITIES_H
 
+#include <iostream>
 
 #include <nifti1_io.h>
 
