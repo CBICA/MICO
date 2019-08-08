@@ -43,10 +43,16 @@ bool segment_and_bias_correct(Image*            image,
 
     // -------------------------------------------------------------------
     // check arguments
-    assert(image != NULL);
-    if (memberships == NULL && bcimage == NULL) {
-        BASIS_THROW(invalid_argument, "segment_and_bias_correct():"
-                << " Neither output parameter is a non-NULL pointer");
+    if (image == NULL)
+    {
+      std::cerr << "Image is not defined, exiting.\n";
+      abort();
+    }
+    
+    if (memberships == NULL && bcimage == NULL) 
+    {
+      std::cerr << "segment_and_bias_correct(): "
+                << " Neither output parameter is a non-NULL pointer.\n";
     }
 
     // -------------------------------------------------------------------
