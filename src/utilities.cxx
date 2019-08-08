@@ -20,7 +20,7 @@
 // #include <basis/os.h>     // hasext()
 
 #include "mico/utilities.h"
-
+#include "cbicaUtilities.h"
 
 // acceptable in .cxx file
 using namespace std;
@@ -452,7 +452,9 @@ Image* convert_nifti_image(nifti_image* nim, short datatype, bool delnim)
 
     string fext;
     string fbase;
-    os::path::splitext(nim->fname, fbase, fext, &niftiexts);
+    string fpath;
+    //os::path::splitext(nim->fname, fbase, fext, &niftiexts);
+    cbica::splitFileName(nim->fname, fpath, fbase, fext);
 
     Image image_in;
     image_in.hdr        = nifti_convert_nim2nhdr(nim);
@@ -464,7 +466,7 @@ Image* convert_nifti_image(nifti_image* nim, short datatype, bool delnim)
     image_in.region.nz  = nim->nz;
     image_in.img.fl     = reinterpret_cast<float*>(nim->data);
     image_in.owns_img   = false;
-    image_in.name       = os::path::basename(fbase);
+    image_in.name       = fbase/* os::path::basename(fbase)*/;
     image_in.compress   = (fext == ".gz");
     image_in.nifti_type = nim->nifti_type;
 
@@ -481,9 +483,10 @@ Image* convert_nifti_image(nifti_image* nim, short datatype, bool delnim)
     if      (datatype == DT_UNSIGNED_CHAR) image->hdr.bitpix = 8 * sizeof(unsigned char);
     else if (datatype == DT_SIGNED_SHORT)  image->hdr.bitpix = 8 * sizeof(short);
     else if (datatype == DT_FLOAT)         image->hdr.bitpix = 8 * sizeof(float);
-    else {
-        ASSERT(false, "Check implementation of new_image()! It should have returned NULL!");
-        abort();
+    else 
+    {
+      std::cerr << "Check implementation of new_image()! It should have returned NULL!\n";
+      exit(EXIT_FAILURE);
     }
 
     // remember original nifti_type
