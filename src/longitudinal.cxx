@@ -15,11 +15,11 @@
 #include <stdio.h>
 #include <string>
 
-#include <basis/assert.h>
+//#include <basis/assert.h>
 
-#include <mico/utilities.h>
-#include <mico/cross-sectional.h>
-#include <mico/longitudinal.h>
+#include "mico/utilities.h"
+#include "mico/cross-sectional.h"
+#include "mico/longitudinal.h"
 
 
 // acceptable in .cxx file
