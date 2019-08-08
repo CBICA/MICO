@@ -43,14 +43,20 @@ IF(NOT EXISTS "${PROJECT_BINARY_DIR}/ep/share/pkgconfig/zlib.pc")
       ${ep_common_args}   
       -DCMAKE_DEBUG_POSTFIX:STRING=d
       -DBUILD_TESTING:BOOL=OFF # testing the ITK build is not required
-      #-DCMAKE_INSTALL_PREFIX:PATH=${PROJECT_BINARY_DIR}/ep
+      -DCMAKE_INSTALL_PREFIX:PATH=${PROJECT_BINARY_DIR}/ep
   )
 
   SET(ZLIB_INCLUDE_DIR "${PROJECT_BINARY_DIR}/ep/include" CACHE STRING "ZLIB incude dir" FORCE)
   IF(MSVC)
-    SET(ZLIB_LIBRARY "${PROJECT_BINARY_DIR}/ep/lib/zlibstatic.lib" CACHE STRING "ZLIB location" FORCE)
+    IF( EXISTS "${PROJECT_BINARY_DIR}/ep/lib/zlibstatic.lib")
+      SET(ZLIB_LIBRARY "${PROJECT_BINARY_DIR}/ep/lib/zlibstatic.lib" CACHE STRING "ZLIB location" FORCE)
+    ENDIF()
   ELSEIF(NOT APPLE)
-    SET(ZLIB_LIBRARY "${PROJECT_BINARY_DIR}/ep/lib/zlibstatic.a" CACHE STRING "ZLIB location" FORCE)
+    IF( EXISTS "${PROJECT_BINARY_DIR}/ep/lib/libz.a")
+      SET(ZLIB_LIBRARY "${PROJECT_BINARY_DIR}/ep/lib/libz.a" CACHE STRING "ZLIB location" FORCE)
+    ELSEIF( EXISTS "${PROJECT_BINARY_DIR}/thirdparty/zlib_build/ep/lib/libz.a")
+      SET(ZLIB_LIBRARY "${PROJECT_BINARY_DIR}/thirdparty/zlib_build/ep/lib/libz.a" CACHE STRING "ZLIB location" FORCE)
+    ENDIF()
   ELSE() # Apple has not been implemented/tested
     MESSAGE(FATAL "macOS has not been implemented or tested. Please use either a Windows/Linux machine")
   ENDIF()
@@ -72,7 +78,7 @@ IF(NOT EXISTS "${PROJECT_BINARY_DIR}/ep/share/pkgconfig/zlib.pc")
       ${ep_common_args}   
       -DCMAKE_DEBUG_POSTFIX:STRING=d
       -DBUILD_TESTING:BOOL=OFF # testing the ITK build is not required
-      #-DCMAKE_INSTALL_PREFIX:PATH=${PROJECT_BINARY_DIR}/ep
+      -DCMAKE_INSTALL_PREFIX:PATH=${PROJECT_BINARY_DIR}/ep
       -DZLIB_LIBRARY=${ZLIB_LIBRARY}
       -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
       -DBUILD_SHARED_LIBS:BOOL=OFF
