@@ -85,19 +85,9 @@ INCLUDE_DIRECTORIES(
   ${PROJECT_BINARY_DIR}/ep/include/nifti
 )
 
-ADD_LIBRARY(micolib STATIC utilities.cxx cross-sectional.cxx longitudinal.cxx io.cxx)
+ADD_LIBRARY(micolib STATIC src/utilities.cxx src/cross-sectional.cxx src/longitudinal.cxx src/io.cxx)
 SET_TARGET_PROPERTIES(micolib PROPERTIES OUTPUT_NAME mico)
-TARGET_LINK_LIBRARIES(micolib ${NiftiCLib_LIBRARIES})
+TARGET_LINK_LIBRARIES(micolib ${ALL_LIBRARIES})
 
-# ============================================================================
-# executable target(s)
-# ============================================================================
-
-# Add executable target for each executable program using basis_add_executable().
-#
-# This command can not only be used to build executables from C/C++, but also
-# source code written in other programming languages such as Java, Python, Perl,
-# MATLAB, and Bash.
-
-basis_add_executable(mico.cxx)
-basis_target_link_libraries(mico micolib)
+ADD_EXECUTABLE(src/mico.cxx)
+TARGET_LINK_LIBRARIES(mico micolib)
