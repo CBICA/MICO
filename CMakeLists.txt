@@ -16,7 +16,7 @@ PROJECT( MICO )
 
 SET(CMAKE_CONFIGURATION_TYPES "Release" CACHE STRING "Default configuration types" FORCE)
 
-IF(NOT EXISTS "${PROJECT_BINARY_DIR}/ep/include")
+IF(NOT EXISTS "${PROJECT_BINARY_DIR}/ep/share/pkgconfig/zlib.pc")
 
   PROJECT(${PROJECT_NAME}_Depends)
 
