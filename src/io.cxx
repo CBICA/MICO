@@ -13,14 +13,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <basis/os/path.h> // dirname(), normpath()
+//#include <basis/os/path.h> // dirname(), normpath()
 
-#include <mico/io.h>
+#include "mico/io.h"
 
 
 // acceptable in .cxx file
 using namespace std;
-using namespace basis;
+//using namespace basis;
 
 
 namespace mico {
