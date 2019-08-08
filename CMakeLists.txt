@@ -79,6 +79,11 @@ IF(NOT EXISTS "${PROJECT_BINARY_DIR}/ep/share/pkgconfig/zlib.pc")
 ENDIF()
 
 # at this point, the dependencies are ready
+FILE( GLOB_RECURSE ALL_LIBRARIES "${PROJECT_BINARY_DIR}/ep/lib/*" )
+INCLUDE_DIRECTORIES(
+  ${PROJECT_BINARY_DIR}/ep/include
+  ${PROJECT_BINARY_DIR}/ep/include/nifti
+)
 
 ADD_LIBRARY(micolib STATIC utilities.cxx cross-sectional.cxx longitudinal.cxx io.cxx)
 SET_TARGET_PROPERTIES(micolib PROPERTIES OUTPUT_NAME mico)
