@@ -46,8 +46,10 @@ IF(NOT EXISTS "${PROJECT_BINARY_DIR}/ep/share/pkgconfig/zlib.pc")
   SET(ZLIB_INCLUDE_DIR "${PROJECT_BINARY_DIR}/ep/include" CACHE STRING "ZLIB incude dir" FORCE)
   IF(MSVC)
     SET(ZLIB_LIBRARY "${PROJECT_BINARY_DIR}/ep/lib/zlibstatic.lib" CACHE STRING "ZLIB location" FORCE)
-  ELSE()
+  ELSEIF(LINUX)
     SET(ZLIB_LIBRARY "${PROJECT_BINARY_DIR}/ep/lib/zlibstatic.a" CACHE STRING "ZLIB location" FORCE)
+  ELSE() # Apple has not been implemented/tested
+    MESSAGE(FATAL "macOS has not been implemented or tested. Please use either a Windows/Linux machine")
   ENDIF()
   
   ExternalProject_Add( 
@@ -70,42 +72,26 @@ IF(NOT EXISTS "${PROJECT_BINARY_DIR}/ep/share/pkgconfig/zlib.pc")
       #-DCMAKE_INSTALL_PREFIX:PATH=${PROJECT_BINARY_DIR}/ep
       -DZLIB_LIBRARY=${ZLIB_LIBRARY}
       -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
+      -DBUILD_SHARED_LIBS:BOOL=OFF
   )
 
  RETURN()
 ENDIF()
 
-# ----------------------------------------------------------------------------
-# version of BASIS template used by this project
-set (TEMPLATE_VERSION 1.5)
 
-# ----------------------------------------------------------------------------
-# include BASIS policies, settings, macros, and functions
+ADD_LIBRARY(micolib STATIC utilities.cxx cross-sectional.cxx longitudinal.cxx io.cxx)
+SET_TARGET_PROPERTIES(micolib PROPERTIES OUTPUT_NAME mico)
+TARGET_LINK_LIBRARIES(micolib ${NiftiCLib_LIBRARIES})
 
-# circumvent issue with CMake's find_package() interpreting these variables
-# relative to the current binary directory instead of the top-level directory
-if (BASIS_DIR AND NOT IS_ABSOLUTE "${BASIS_DIR}")
-  set (BASIS_DIR "${CMAKE_BINARY_DIR}/${BASIS_DIR}")
-  get_filename_component (BASIS_DIR "${BASIS_DIR}" ABSOLUTE)
-endif ()
-# moreover, users tend to specify the installation prefix instead of the
-# actual directory containing the package configuration file
-if (IS_DIRECTORY "${BASIS_DIR}")
-  list (INSERT CMAKE_PREFIX_PATH 0 "${BASIS_DIR}")
-endif ()
-# if BASIS is not found, set CMAKE_INSTALL_PREFIX to invalid value if not
-# set explicitly at the command-line such that BASIS will still initialize
-# it to its defaults even though already cached
-find_package (BASIS)
-if (NOT BASIS_FOUND)
-  if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-    set (CMAKE_INSTALL_PREFIX "" CACHE INTERNAL "Installation prefix." FORCE)
-  endif ()
-  message (FATAL_ERROR "BASIS not found! Please specify installation directory"
-                       " of BASIS or the location of the BASISConfig.cmake file"
-                       " using the BASIS_DIR variable.")
-endif ()
+# ============================================================================
+# executable target(s)
+# ============================================================================
 
-# ----------------------------------------------------------------------------
-# configure build system
-basis_project_impl ()
+# Add executable target for each executable program using basis_add_executable().
+#
+# This command can not only be used to build executables from C/C++, but also
+# source code written in other programming languages such as Java, Python, Perl,
+# MATLAB, and Bash.
+
+basis_add_executable(mico.cxx)
+basis_target_link_libraries(mico micolib)
