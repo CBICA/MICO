@@ -83,11 +83,12 @@ FILE( GLOB_RECURSE ALL_LIBRARIES "${PROJECT_BINARY_DIR}/ep/lib/*" )
 INCLUDE_DIRECTORIES(
   ${PROJECT_BINARY_DIR}/ep/include
   ${PROJECT_BINARY_DIR}/ep/include/nifti
+  include
 )
 
 ADD_LIBRARY(micolib STATIC src/utilities.cxx src/cross-sectional.cxx src/longitudinal.cxx src/io.cxx)
 SET_TARGET_PROPERTIES(micolib PROPERTIES OUTPUT_NAME mico)
 TARGET_LINK_LIBRARIES(micolib ${ALL_LIBRARIES})
 
-ADD_EXECUTABLE(src/mico.cxx)
+ADD_EXECUTABLE(mico src/mico.cxx)
 TARGET_LINK_LIBRARIES(mico micolib)
