@@ -12,13 +12,58 @@
 # minimum required CMake version
 cmake_minimum_required (VERSION 2.8.4)
 
-IF(NOT EXISTS "${PROJECT_BINARY_DIR}/thirdparty/zlib")
-  ADD_SUBDIRECTORY(thirdparty/zlib)
-  RETURN()
-ENDIF()
-IF(NOT EXISTS "${PROJECT_BINARY_DIR}/thirdparty/zlib")
-SET( ENV{CMAKE_PREFIX_PATH} "${PROJECT_BINARY_DIR}/thirdparty/zlib" CACHE PATH "" FORCE )
-add_subdirectory(thirdparty/nifticlib)
+PROJECT( MICO )
+
+PROJECT(${PROJECT_NAME}_Depends)
+INCLUDE( ExternalProject )
+ExternalProject_Add( 
+  ZLIB
+  DEPENDS ""
+  UPDATE_COMMAND ""
+  PATCH_COMMAND ""
+  SOURCE_DIR ${PROJECT_SOURCE_DIR}/thirdparty/nifticlib
+  BINARY_DIR nifticlib_build
+  UPDATE_COMMAND ""
+  PATCH_COMMAND ""
+  INSTALL_COMMAND ""
+  CMAKE_GENERATOR ${gen}
+  CMAKE_ARGS
+    ${ep_common_args}   
+    -DCMAKE_DEBUG_POSTFIX:STRING=d
+    -DBUILD_TESTING:BOOL=OFF # testing the ITK build is not required
+    -DCMAKE_INSTALL_PREFIX:PATH=${PROJECT_BINARY_DIR}/ep
+)
+
+ExternalProject_Add( 
+  NIFTICLIB
+  DEPENDS ZLIB
+  UPDATE_COMMAND ""
+  PATCH_COMMAND ""
+  SOURCE_DIR ${PROJECT_SOURCE_DIR}/thirdparty/zlib
+  BINARY_DIR zlib_build
+  UPDATE_COMMAND ""
+  PATCH_COMMAND ""
+  INSTALL_COMMAND ""
+  CMAKE_GENERATOR ${gen}
+  CMAKE_ARGS
+    ${ep_common_args}   
+    -DCMAKE_DEBUG_POSTFIX:STRING=d
+    -DBUILD_TESTING:BOOL=OFF # testing the ITK build is not required
+    -DCMAKE_INSTALL_PREFIX:PATH=${PROJECT_BINARY_DIR}/ep
+)
+
+#IF(NOT EXISTS "${PROJECT_BINARY_DIR}/thirdparty/zlib/zconf.h")
+#  PROJECT(${PROJECT_NAME}_ZLIB)
+#  MESSAGE(STATUS "Starting ZLib compilation")
+#  ADD_SUBDIRECTORY(thirdparty/zlib)
+#  RETURN()
+#ENDIF()
+#IF(NOT EXISTS "${PROJECT_BINARY_DIR}/thirdparty/nifticlib")
+#  PROJECT(${PROJECT_NAME}_NIFTI)
+#  MESSAGE(STATUS "Starting NIfTICLib compilation")
+#  ADD_SUBDIRECTORY(thirdparty/nifticlib)
+#  RETURN()
+#ENDIF()
 return()
 
 SET( ENV{CMAKE_PREFIX_PATH} "${PROJECT_BINARY_DIR}/thirdparty/zlib;${PROJECT_BINARY_DIR}/thirdparty/nifticlib" CACHE PATH "" FORCE )
