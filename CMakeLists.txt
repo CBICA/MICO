@@ -12,6 +12,11 @@
 # minimum required CMake version
 cmake_minimum_required (VERSION 2.8.4)
 
+# superbuild
+IF( NOT EXISTS ${PROJECT_BINARY_DIR}/ITK-build/ITKConfig.cmake )
+
+ENDIF()
+
 # ----------------------------------------------------------------------------
 # version of BASIS template used by this project
 set (TEMPLATE_VERSION 1.5)
