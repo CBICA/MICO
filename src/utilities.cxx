@@ -238,7 +238,7 @@ void copy_image_data(Image*             image_out,
                                lmin, lmax, slope, inter);
                 break;
             default:
-              std::cerr << "Invalid image datatype: " << image_in->hdr.datatype;
+              std::cerr << "Invalid image datatype: " << image_in->hdr.datatype << "\n";
                 abort();
         }
     }
@@ -260,7 +260,7 @@ void copy_image_data(Image*             image_out,
                                 slope, inter);
             break;
         default:
-            std::cerr << "Invalid image datatype: " << image_in->hdr.datatype);
+            std::cerr << "Invalid image datatype: " << image_in->hdr.datatype << "\n";
             abort();
     }
     // set scl_slope and scl_inter of output image
