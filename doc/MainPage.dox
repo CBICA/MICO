@@ -1,0 +1,31 @@
+/**
+ * @file  MainPage.dox
+ * @brief Main page of API documentation.
+ *
+ * Copyright (c) 2011 University of Pennsylvania. All rights reserved.<br />
+ * See http://www.rad.upenn.edu/sbia/software/license.html or COPYING file.
+ *
+ * Contact: SBIA Group <sbia-software at uphs.upenn.edu>
+ */
+
+/**
+@mainpage
+
+@section Introduction
+
+The Multiplicative Intrinsic Component Optimization (MICO) software implements
+an algorithm for simultaneous bias field estimation and tissue segmentation.
+The MICO algorithm estimates the bias field and the true image, which are two
+multiplicative components of a given MR image. The bias field is approximated
+by a linear combination of a set of smooth basis functions.
+The true image is represented by tissue membership functions and the corresponding
+true intensity means (TIM). The bias field and the true image are optimized by
+minimizing an energy function in terms  of the combination coefficients in the
+linear combination of the basis functions, the tissue membership functions,
+and the corresponding TIMs.
+
+@section Links Related Links
+
+- <a href="https://sbia-wiki.uphs.upenn.edu/wiki/index.php/MICO">Project Wiki</a> - The main Wiki page.
+- @ref PublicAPI - Documentation of the public API functions.
+*/

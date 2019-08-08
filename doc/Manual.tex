@@ -1,0 +1,252 @@
+% Copyright (c) 2011 University of Pennsylvania. All rights reserved.
+% See http://www.rad.upenn.edu/sbia/software/license.html or COPYING file.
+%
+% Contact: SBIA Group <sbia-software at uphs.upenn.edu>
+
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{cite}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{subfigure}
+
+% Title Page
+\title{Multiplicative Intrinsic Component Optimization \\ Software Manual}
+\author{Andreas Schuh, Chunming Li}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\setcounter{tocdepth}{1}
+
+\pagebreak
+
+% ============================================================================
+% Introduction
+% ============================================================================
+\section{Introduction}
+\label{intro}
+
+This manual describes the usage of the Multiplicative Intrinsic Component\linebreak
+Optimization (MICO) software. The MICO software is an implementation
+of an algorithm for simultaneous bias field estimation and segmentation of
+three-dimensional (3D) MR brain images~\cite{li,cvpr}. It can be used for:
+\begin{itemize}
+\item Bias correction.
+\item Segmentation of independent patient scans.
+\item Segmentation of longitudinal series of brain images.
+\end{itemize}
+
+The segmentations contain different labels for cerebrospinal fluid (CSF), \linebreak
+gray matter (GM), white matter (WM), and the value zero for background (BG).
+The bias field is estimated by a linear combination of a number of smooth basis
+functions, which are constructed as 20 polynomials up to the third degree.
+
+MICO can be used on the command-line using the \texttt{mico} command
+or in C++ code by linking to the \texttt{mico} library. Note that only the most
+important options of the \texttt{mico} command are documented in the following.
+For more details on the available options, run the command with the option
+\texttt{-{-}help}. This will output a brief description together with a list
+of required and optional arguments. For a list of available options only,
+use \texttt{-{-}helpshort} instead. If you want to use MICO directly in your
+C++ code, please refer to the API documentation.
+
+% ============================================================================
+% Preparation
+% ============================================================================
+\section{Preparation}
+\label{data}
+
+Any input patient data has to be skull stripped first. This can be done using
+\texttt{bet}~\cite{bet}, for example. In case of longitudinal studies,
+all time points must further be co-registered across time using a rigid
+registration with six degrees of freedom. Therefore, FSL's
+\texttt{flirt}~\cite{flirt} command is commonly applied.
+Please refer to the documentation of the named third-party tools for further
+information on how they are applied.
+
+Note that the input images must be three-dimensional images with scalar voxel
+type of either DT{\_}UNSIGNED{\_}CHAR, DT{\_}SIGNED{\_}SHORT, DT{\_}SIGNED{\_}INT,
+or DT{\_}FLOAT, and stored in the ANALYZE 7.5 or the NIfTI-1 file format.
+
+\pagebreak
+
+For your convenience, we included 11 scans of a single subject referred to
+as \texttt{BC} which were acquired at different time points.
+The directory where these files are installed is referred to in the following
+as \texttt{example} shell variable. Further, we assume that the path to the
+\texttt{mico} command is in your \texttt{PATH} environment variable.
+\footnotesize
+\begin{verbatim}
+$ prefix=/top/directory/of/MICO/installation
+$ setenv PATH "${prefix}/bin:${PATH}"
+$ example=${prefix}/share/sbia/mico/example
+\end{verbatim}
+\normalsize
+Or in case of BASH:
+\footnotesize
+\begin{verbatim}
+$ prefix=/top/directory/of/MICO/installation
+$ export PATH="${prefix}/bin:${PATH}"
+$ example=${prefix}/share/sbia/mico/example
+\end{verbatim}
+\normalsize
+
+% ============================================================================
+% 3D Segmentation
+% ============================================================================
+\section{Segmentation of MR Brain Images}
+\label{3d}
+
+In order to segment a given MR brain image into CSF, GM, WM, and BG, simply
+run the MICO command with the file path of the input image as argument, i.e.,
+\footnotesize
+\begin{verbatim}
+$ mico ${example}/BC01-T1-byte_cbq
+\end{verbatim}
+\normalsize
+The resulting segmentation (label image) will in this case be written to the
+file \linebreak \texttt{BC01-T1-byte{\_}cbq{\_}segments.nii.gz} located in the
+current working directory.
+Use the \texttt{-{-}outputdir} option to specify a different output directory
+and \texttt{-{-}suffix} to change the file name suffix of the
+segmentation image, optionally including a different NIfTI-1 file format
+extension. Moreover, you can specify more than one input image to segment.
+Note, however, that each input image is segmented independently.
+\footnotesize
+\begin{verbatim}
+$ mico --outputdir segmentations --suffix .hdr
+        ${example}/BC01-T1-byte_cbq
+        ${example}/BC02-T1-byte_cbq_flirtedToY16dof
+        ${example}/BC03-T1-byte_cbq_flirtedToY16dof
+        ${example}/BC04-T1-byte_cbq_flirtedToY16dof
+        ${example}/BC05-T1-byte_cbq_flirtedToY16dof
+        ${example}/BC06-T1-byte_cbq_flirtedToY16dof
+        ${example}/BC07-T1-byte_cbq_flirtedToY16dof
+        ${example}/BC08-T1-byte_cbq_flirtedToY16dof
+        ${example}/BC09-T1-byte_cbq_flirtedToY16dof
+        ${example}/BC10-T1-byte_cbq_flirtedToY16dof
+        ${example}/BC11-T1-byte_cbq_flirtedToY16dof
+\end{verbatim}
+\normalsize
+Alternatively, you can list the image file paths in a text file, one file path
+per line, and use the \texttt{--inputlist} option instead, i.e.,
+\footnotesize
+\begin{verbatim}
+$ mico --inputlist ${example}/BC.lst --outputdir segmentations --suffix .hdr
+\end{verbatim}
+\normalsize
+Either command stores the segmentations in the two file NIfTI-1 image file
+format under the same file name as the corresponding input image, but in the
+subdirectory \texttt{segmentations} of the current working directory.
+
+\pagebreak
+
+% ============================================================================
+% 4D Segmentation
+% ============================================================================
+\section{Segmentation of Longitudinal Study}
+\label{4d}
+
+In Section~\ref{3d} we have demonstrated how the \texttt{mico} command can
+be used to segment 3D brain images into the three major tissue classes. This,
+however, is done independently, i.e., no longitudinal information given
+across time is used to maintain consistency among the segmentations of the
+different time points. In order to take the longitudinal information into
+consideration, use the option \texttt{--4d}. To segment the longitudinal
+example study, run the command:
+\footnotesize
+\begin{verbatim}
+$ mico --4d --outputdir segmentations --suffix _labels
+        ${example}/BC01-T1-byte_cbq
+        ${example}/BC02-T1-byte_cbq_flirtedToY16dof
+        ${example}/BC03-T1-byte_cbq_flirtedToY16dof
+        ${example}/BC04-T1-byte_cbq_flirtedToY16dof
+        ${example}/BC05-T1-byte_cbq_flirtedToY16dof
+        ${example}/BC06-T1-byte_cbq_flirtedToY16dof
+        ${example}/BC07-T1-byte_cbq_flirtedToY16dof
+        ${example}/BC08-T1-byte_cbq_flirtedToY16dof
+        ${example}/BC09-T1-byte_cbq_flirtedToY16dof
+        ${example}/BC10-T1-byte_cbq_flirtedToY16dof
+        ${example}/BC11-T1-byte_cbq_flirtedToY16dof
+\end{verbatim}
+\normalsize
+Alternatively, you can list the image file paths in a text file, one file path
+per line, and use the \texttt{--inputlist} option instead, i.e.,
+\footnotesize
+\begin{verbatim}
+$ mico --4d --inputlist ${example}/BC.lst --outputdir segmentations
+        --suffix _labels
+\end{verbatim}
+\normalsize
+
+% ============================================================================
+% Bias Correction of MRI Brain Images
+% ============================================================================
+\section{Bias Correction of MRI Brain Images}
+\label{bc}
+
+The MICO algorithm performs a bias field estimation simultaneously with the
+segmentation. Hence, the bias correction is always applied even if only the
+final segmentations are saved to disk. In order to save also the bias corrected
+image(s), use the \texttt{-{-}bias-correct} option. If only the bias correction
+should be performed, use the option \texttt{-{-}bias-correct-only} instead.
+
+For example, to perform a bias correction of the baseline image of the given
+longitudinal example study, run the command:
+\footnotesize
+\begin{verbatim}
+$ mico --bias-correct-only ${example}/BC01-T1-byte_cbq
+\end{verbatim}
+\normalsize
+This will output the bias corrected image and save it in the current working \linebreak
+directory as the file \texttt{BC01-T1-byte{\_}cbq{\_}biascorrected.nii.gz}.
+If you want to use a different file name suffix or file format, use the
+\texttt{--bias-correct-suffix} option to specify a different suffix for the
+file names of the bias corrected images.
+
+% ============================================================================
+% Notes
+% ============================================================================
+\section{Notes}
+\label{notes}
+
+\begin{itemize}
+
+\item Recognized file format extensions are
+\texttt{.hdr} or  \texttt{.img} for header and data NIfTI-1 or ANALYZE 7.5 image
+file pairs, \texttt{.hdr.gz} and \texttt{.img.gz} for compressed header and
+data NIfTI-1 image file pairs, \texttt{.nii} for uncompressed NIfTI-1 images,
+and \texttt{.nii.gz} for compressed NIfTI-1 images. Only if an input image was
+stored in the ANALYZE 7.5 format and no particular format has been specified for
+the output images, these output images are stored in the ANALYZE 7.5 format as
+well.
+
+\item Increase the weight for a certain tissue class if it is over segmented,
+and decrease the weight if it is under segmented. The default weights used by
+\texttt{mico} are reported in the help output of this command, i.e.,
+\texttt{mico --help}.
+
+\item If there is almost no intensity inhomogeneity in the input image,
+a large weight (e.g. 10) can be used for the fuzzy C-means (FCM) term, the
+parameter \texttt{-{-}lambda} of \texttt{mico}. In this case, the performance
+of the MICO algorithm is close to the performance of the FCM algorithm.
+If the intensity inhomogeneity is significant, however, set the weight of the
+FCM term to zero or a very small positive number (e.g. 0.00001).
+Typically, for 3T MR images, this parameter can be set to zero.
+For 1.5T MR images, this parameter can be set to 1 if the intensity
+inhomogeneity is not strong, and to 10 if there is almost no inhomogeneity.
+
+\item By default, only the label map with the labels of the segmented structures
+is output. The output of the membership images, one for each segmented structure,
+can be requested using the \texttt{-{-}fuzzy} option. These images are commonly
+also referred to as fuzzy segmentation(s).
+\end{itemize}
+
+% ============================================================================
+% Bibliography
+% ============================================================================
+\bibliographystyle{splncs03}
+\bibliography{references}
+
+\end{document}          
