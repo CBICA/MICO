@@ -245,8 +245,10 @@ Image* create_label_map(const Image*      image,
                         const Parameters& params,
                         int               verbosity)
 {
-    if (memberships.size () != 3) {
-        BASIS_THROW(invalid_argument, "create_label_map(): Expected three membership functions!");
+    if (memberships.size () != 3) 
+    {
+      std::cerr << "create_label_map(): Expected three membership functions!\n";
+      abort();
     }
 
     const unsigned int total = image->region.nx * image->region.ny * image->region.nz;
@@ -254,14 +256,20 @@ Image* create_label_map(const Image*      image,
     ImageMap::const_iterator it_gm  = memberships.find("GM");
     ImageMap::const_iterator it_wm  = memberships.find("WM");
 
-    if (it_csf == memberships.end() || it_csf->second == NULL) {
-        BASIS_THROW(invalid_argument, "create_label_map(): Missing membership function for CSF!");
+    if (it_csf == memberships.end() || it_csf->second == NULL) 
+    {
+      std::cerr << "create_label_map(): Missing membership function for CSF!\n";
+      abort();
     }
-    if (it_wm == memberships.end() || it_wm->second == NULL) {
-        BASIS_THROW(invalid_argument, "create_label_map(): Missing membership function for WM!");
+    if (it_wm == memberships.end() || it_wm->second == NULL) 
+    {
+      std::cerr << "create_label_map(): Missing membership function for WM!\n";
+      abort();
     }
-    if (it_gm == memberships.end() || it_gm->second == NULL) {
-        BASIS_THROW(invalid_argument, "create_label_map(): Missing membership function for GM!");
+    if (it_gm == memberships.end() || it_gm->second == NULL) 
+    {
+      std::cerr << "create_label_map(): Missing membership function for GM!\n";
+      abort();
     }
 
     Image* segmentation = new_image(image->region.nx,
