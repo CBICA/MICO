@@ -14,11 +14,11 @@
 #include <stdio.h>
 #include <string>
 
-#include <basis/assert.h> // assert(), ASSERT()
-#include <basis/except.h> // BASIS_THROW, std::invalid_argument
+//#include <basis/assert.h> // assert(), ASSERT()
+//#include <basis/except.h> // BASIS_THROW, std::invalid_argument
 
-#include <mico/utilities.h>
-#include <mico/cross-sectional.h>
+#include "mico/utilities.h"
+#include "mico/cross-sectional.h"
 
 
 // acceptable in .cxx file
