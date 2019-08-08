@@ -86,7 +86,7 @@ INCLUDE_DIRECTORIES(
   include
 )
 
-ADD_LIBRARY(micolib STATIC src/utilities.cxx src/cross-sectional.cxx src/longitudinal.cxx src/io.cxx)
+ADD_LIBRARY(micolib STATIC src/utilities.cxx src/cross-sectional.cxx src/longitudinal.cxx src/io.cxx src/cbicaUtilities.cpp)
 SET_TARGET_PROPERTIES(micolib PROPERTIES OUTPUT_NAME mico)
 TARGET_LINK_LIBRARIES(micolib ${ALL_LIBRARIES})
 
