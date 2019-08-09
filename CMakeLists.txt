@@ -10,7 +10,7 @@
 
 # ----------------------------------------------------------------------------
 # minimum required CMake version
-cmake_minimum_required (VERSION 2.8.4)
+cmake_minimum_required (VERSION 3.0)
 
 PROJECT( MICO )
 SET( PROJECT_VERSION_MAJOR 2 )
