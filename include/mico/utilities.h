@@ -13,6 +13,7 @@
 #define _MICO_UTILITIES_H
 
 #include <iostream>
+#include <set>
 
 #include <nifti1_io.h>
 

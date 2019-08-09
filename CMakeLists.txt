@@ -19,7 +19,7 @@ SET(CMAKE_CONFIGURATION_TYPES "Release" CACHE STRING "Default configuration type
 SET(CMAKE_CXX_STANDARD 11 CACHE STRING "C++ standard to be used" )
 SET(CMAKE_CXX_STANDARD_REQUIRED YES) 
 
-IF(NOT EXISTS "${PROJECT_BINARY_DIR}/ep/share/pkgconfig/zlib.pc")
+IF(NOT EXISTS "${PROJECT_BINARY_DIR}/ep/include/nifti")
 
   PROJECT(${PROJECT_NAME}_Depends)
 
@@ -27,43 +27,11 @@ IF(NOT EXISTS "${PROJECT_BINARY_DIR}/ep/share/pkgconfig/zlib.pc")
     SET( CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/ep CACHE PATH "Changed the default install path" FORCE )
   ENDIF( )
   INCLUDE(ExternalProject)
-  ExternalProject_Add( 
-    ZLIB
-    UPDATE_COMMAND ""
-    PATCH_COMMAND ""
-    SOURCE_DIR ${PROJECT_SOURCE_DIR}/thirdparty/zlib
-    BINARY_DIR thirdparty/zlib_build
-    UPDATE_COMMAND ""
-    PATCH_COMMAND ""
-    #INSTALL_COMMAND ""
-    #INSTALL_COMMAND make install
-    # INSTALL_COMMAND make install/strip
-    CMAKE_GENERATOR ${gen}
-    CMAKE_ARGS
-      ${ep_common_args}   
-      -DCMAKE_DEBUG_POSTFIX:STRING=d
-      -DBUILD_TESTING:BOOL=OFF # testing the ITK build is not required
-      -DCMAKE_INSTALL_PREFIX:PATH=${PROJECT_BINARY_DIR}/ep
-  )
-
-  SET(ZLIB_INCLUDE_DIR "${PROJECT_BINARY_DIR}/ep/include" CACHE STRING "ZLIB incude dir" FORCE)
-  IF(MSVC)
-    IF( EXISTS "${PROJECT_BINARY_DIR}/ep/lib/zlibstatic.lib")
-      SET(ZLIB_LIBRARY "${PROJECT_BINARY_DIR}/ep/lib/zlibstatic.lib" CACHE STRING "ZLIB location" FORCE)
-    ENDIF()
-  ELSEIF(NOT APPLE)
-    IF( EXISTS "${PROJECT_BINARY_DIR}/ep/lib/libz.a")
-      SET(ZLIB_LIBRARY "${PROJECT_BINARY_DIR}/ep/lib/libz.a" CACHE STRING "ZLIB location" FORCE)
-    ELSEIF( EXISTS "${PROJECT_BINARY_DIR}/thirdparty/zlib_build/ep/lib/libz.a")
-      SET(ZLIB_LIBRARY "${PROJECT_BINARY_DIR}/thirdparty/zlib_build/ep/lib/libz.a" CACHE STRING "ZLIB location" FORCE)
-    ENDIF()
-  ELSE() # Apple has not been implemented/tested
-    MESSAGE(FATAL "macOS has not been implemented or tested. Please use either a Windows/Linux machine")
-  ENDIF()
   
+  FIND_PACKAGE(ZLIB)
+
   ExternalProject_Add( 
     NIFTICLIB
-    DEPENDS ZLIB
     UPDATE_COMMAND ""
     PATCH_COMMAND ""
     SOURCE_DIR ${PROJECT_SOURCE_DIR}/thirdparty/nifticlib
@@ -79,13 +47,13 @@ IF(NOT EXISTS "${PROJECT_BINARY_DIR}/ep/share/pkgconfig/zlib.pc")
       -DCMAKE_DEBUG_POSTFIX:STRING=d
       -DBUILD_TESTING:BOOL=OFF # testing the ITK build is not required
       -DCMAKE_INSTALL_PREFIX:PATH=${PROJECT_BINARY_DIR}/ep
-      -DZLIB_LIBRARY=${ZLIB_LIBRARY}
-      -DZLIB_INCLUDE_DIR=${ZLIB_INCLUDE_DIR}
       -DBUILD_SHARED_LIBS:BOOL=OFF
   )
 
  RETURN()
 ENDIF()
+
+FIND_PACKAGE(ZLIB)
 
 # at this point, the dependencies are ready
 FILE( GLOB_RECURSE ALL_LIBRARIES "${PROJECT_BINARY_DIR}/ep/lib/*" )
@@ -97,7 +65,7 @@ INCLUDE_DIRECTORIES(
 
 ADD_LIBRARY(micolib STATIC src/utilities.cxx src/cross-sectional.cxx src/longitudinal.cxx src/io.cxx src/cbicaUtilities.cpp)
 SET_TARGET_PROPERTIES(micolib PROPERTIES OUTPUT_NAME mico)
-TARGET_LINK_LIBRARIES(micolib ${ALL_LIBRARIES})
+TARGET_LINK_LIBRARIES(micolib ${ALL_LIBRARIES} ${ZLIB_LIBRARIES})
 
 ADD_EXECUTABLE(mico src/mico.cxx)
 TARGET_LINK_LIBRARIES(mico micolib)
