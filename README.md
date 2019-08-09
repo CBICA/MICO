@@ -1,20 +1,6 @@
 
 # MICO: Multiplicative Intrinsic Component Optimization
 
-Section of Biomedical Image Analysis
-Department of Radiology
-University of Pennsylvania
-3700 Hamilton Walk, Floor 7, Tower D
-Philadelphia, PA 19104
-
-Web: https://www.med.upenn.edu/sbia/ 
-Email: software@cbica.upenn.edu
-
-Copyright (c) 2011, 2012 University of Pennsylvania. All rights reserved.
-See https://www.med.upenn.edu/sbia/software/license.html or COPYING file.
-
-
-
 ## Intrduction
 
 The Multiplicative Intrinsic Component Optimization (MICO) software implements an algorithm for simultaneous bias field estimation and tissue segmentation [1, 2]. The MICO algorithm estimates the bias field and the true image, which are two multiplicative components of a given MR image. The bias field is approximated by a linear combination of a set of smooth basis functions.
