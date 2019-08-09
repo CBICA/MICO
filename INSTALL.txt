@@ -55,20 +55,11 @@ BUILDING THE SOFTWARE FROM SOURCES
 
   The following software has to be installed (if not optional).
 
-  - BASIS >= 2.0
+  - ZLIB: On Ubuntu, the command is "sudo apt install zlib1g-dev"
+  - CMake 2.8.12 or higher
+  - C++ compiler 
 
-    Web Site: http://www.rad.upenn.edu/sbia/software/basis/
-    Download: http://www.rad.upenn.edu/sbia/software/distributions/basis-current-source.tar.gz
-
-    This project is based on BASIS, a meta-project developed at SBIA to
-    standardize and simplify the software development.
-
-  - nifticlib 2.0 or greater
-
-    Web:      http://niftilib.sourceforge.net/
-    Download: http://sourceforge.net/projects/niftilib/files/nifticlib/
-    Ubuntu:   nifticlib (maverick)
-
+  NOTE: Windows machines are currently not supported.
 
   Build Steps
   -----------
