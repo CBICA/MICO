@@ -39,6 +39,8 @@ CONTRIBUTORS
 
   Listed below are the names of the ones who contributed notably to this software.
 
+  - Sarthak Pati    Removed BASIS requirement and released 2.0.0
+  
   - Andreas Schuh   He greatly helped to improve the quality of the software and
                     contributed implementations for reading and writing NIfTI-1
                     images using the nifticlib library and modified the code
