@@ -2,14 +2,14 @@
   Section of Biomedical Image Analysis
   Department of Radiology
   University of Pennsylvania
-  3600 Market Street, Suite 380
+  3700 Hamilton Walk, Floor 7, Tower D
   Philadelphia, PA 19104
 
-  Web:   http://www.rad.upenn.edu/sbia/
-  Email: sbia-software at uphs.upenn.edu
+  Web:   https://www.med.upenn.edu/sbia/
+  Email: software at cbica.upenn.edu
 
   Copyright (c) 2011, 2012 University of Pennsylvania. All rights reserved.
-  See http://www.rad.upenn.edu/sbia/software/license.html or COPYING file.
+  See https://www.med.upenn.edu/sbia/software/license.html or COPYING file.
 
 
 
@@ -101,7 +101,7 @@ BUILDING THE SOFTWARE FROM SOURCES
   Please refer to this guide first if you are uncertain about above steps or
   have problems to build, test, or install the software on your system.
   If this guide does not help you resolve the issue, please contact us at
-  <sbia-software at uphs.upenn.edu>. In case of failing tests, please attach
+  <software at cbica.upenn.edu>. In case of failing tests, please attach
   the output of the following command to your email:
  
   $ ctest -V >& test.log
@@ -126,6 +126,6 @@ BUILDING THE SOFTWARE FROM SOURCES
 REFERENCES
 ==========
 
-  [1] http://www.rad.upenn.edu/sbia/software/basis/
+  [1] https://www.med.upenn.edu/sbia/software/basis/
 
-  [2] http://www.rad.upenn.edu/sbia/software/basis/howto/install/
+  [2] https://www.med.upenn.edu/sbia/software/basis/howto/install/

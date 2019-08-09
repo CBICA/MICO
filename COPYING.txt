@@ -2,11 +2,11 @@
   Section of Biomedical Image Analysis
   Department of Radiology
   University of Pennsylvania
-  3600 Market Street, Suite 380
+  3700 Hamilton Walk, Floor 7, Tower D
   Philadelphia, PA 19104
 
-  Web:   http://www.rad.upenn.edu/sbia/
-  Email: sbia-software at uphs.upenn.edu
+  Web:   https://www.med.upenn.edu/sbia/
+  Email: software at cbica.upenn.edu
 
 
 

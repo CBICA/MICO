@@ -8,7 +8,7 @@
 # modules have to be specified here such that the top-level project can analyze
 # the inter-module dependencies.
 #
-# @sa http://www.rad.upenn.edu/sbia/software/basis/standard/modules/
+# @sa https://www.med.upenn.edu/sbia/software/basis/standard/modules/
 #
 # However, not only dependencies to other modules can be specified here,
 # but also dependencies on external packages. A more flexible alternative to
@@ -33,7 +33,7 @@
 #   AUTHOR           "Max Muster"
 #   COPYRIGHT        "2012 University of Pennsylvania"
 #   LICENSE          "See COPYING file."
-#   CONTACT          "SBIA Group <sbia-software at uphs.upenn.edu>"
+#   CONTACT          "SBIA Group <software at cbica.upenn.edu>"
 #   # ------------------------------------------------------------------------
 #   # dependencies
 #   DEPENDS          NiftiCLib PythonInterp
@@ -43,9 +43,9 @@
 # @endcode
 #
 # Copyright (c) 2011, 2012 University of Pennsylvania. All rights reserved.<br />
-# See http://www.rad.upenn.edu/sbia/software/license.html or COPYING file.
+# See https://www.med.upenn.edu/sbia/software/license.html or COPYING file.
 #
-# Contact: SBIA Group <sbia-software at uphs.upenn.edu>
+# Contact: SBIA Group <software at cbica.upenn.edu>
 ##############################################################################
 
 # Note: The #<*> patterns are required by the basisproject tool and should be
@@ -62,8 +62,8 @@ basis_project (
               " estimation and tissue segmentation."
   AUTHORS     "Chunming Li" "Jingjing Gao" "Andreas Schuh"
   COPYRIGHT   "2011, 2012 University of Pennsylvania"
-  LICENSE     "See http://www.rad.upenn.edu/sbia/software/license.html or COPYING file."
-  CONTACT     "SBIA Group <sbia-software at uphs.upenn.edu>"
+  LICENSE     "See https://www.med.upenn.edu/sbia/software/license.html or COPYING file."
+  CONTACT     "SBIA Group <software at cbica.upenn.edu>"
   # --------------------------------------------------------------------------
   # dependencies
   DEPENDS

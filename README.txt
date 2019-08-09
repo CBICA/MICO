@@ -2,14 +2,14 @@
   Section of Biomedical Image Analysis
   Department of Radiology
   University of Pennsylvania
-  3600 Market Street, Suite 380
+  3700 Hamilton Walk, Floor 7, Tower D
   Philadelphia, PA 19104
 
-  Web:   http://www.rad.upenn.edu/sbia/
-  Email: sbia-software at uphs.upenn.edu
+  Web:   https://www.med.upenn.edu/sbia/
+  Email: software at cbica.upenn.edu
 
   Copyright (c) 2011, 2012 University of Pennsylvania. All rights reserved.
-  See http://www.rad.upenn.edu/sbia/software/license.html or COPYING file.
+  See https://www.med.upenn.edu/sbia/software/license.html or COPYING file.
 
 
 
@@ -64,7 +64,7 @@ PACKAGE OVERVIEW
 LICENSING
 =========
 
-  See http://www.rad.upenn.edu/sbia/software/license.html or COPYING file.
+  See https://www.med.upenn.edu/sbia/software/license.html or COPYING file.
 
 
 
@@ -87,7 +87,7 @@ DOCUMENTATION
   process. You find the API documentation in the doc/api/ subdirectory of your
   installation (if it was build as part of the build and installation, see
   instructions in the INSTALL file), or at
-  http://www.rad.upenn.edu/sbia/software/doxygen/mico/1.0/html/.
+  https://www.med.upenn.edu/sbia/software/doxygen/mico/1.0/html/.
 
 
 

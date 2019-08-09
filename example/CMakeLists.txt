@@ -6,9 +6,9 @@
 # example directory of the installation tree.
 #
 # Copyright (c) 2011 University of Pennsylvania. All rights reserved.<br />
-# See http://www.rad.upenn.edu/sbia/software/license.html or COPYING file.
+# See https://www.med.upenn.edu/sbia/software/license.html or COPYING file.
 #
-# Contact: SBIA Group <sbia-software at uphs.upenn.edu>
+# Contact: SBIA Group <software at cbica.upenn.edu>
 ##############################################################################
 
 basis_install_directory ("${INSTALL_EXAMPLE_DIR}")
