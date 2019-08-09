@@ -70,8 +70,7 @@ mico library. External C++ code can link directly to this library to make use
 of the MICO implementations instead of running the mico command as separate
 process. You find the API documentation in the doc/api/ subdirectory of your
 installation (if it was build as part of the build and installation, see
-instructions in the INSTALL file), or at
-https://www.med.upenn.edu/sbia/software/doxygen/mico/1.0/html/.
+instructions in the [INSTALL file](INSTALL.md)).
 
 
 ## References
