@@ -7,8 +7,8 @@ University of Pennsylvania
 3700 Hamilton Walk, Floor 7, Tower D
 Philadelphia, PA 19104
 
-Web: https://www.med.upenn.edu/sbia/
-Email: software at cbica.upenn.edu
+Web: https://www.med.upenn.edu/sbia/ 
+Email: software@cbica.upenn.edu
 
 Copyright (c) 2011, 2012 University of Pennsylvania. All rights reserved.
 See https://www.med.upenn.edu/sbia/software/license.html or COPYING file.
