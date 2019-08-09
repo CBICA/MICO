@@ -777,7 +777,7 @@ int main(int argc, char* argv[])
                 break;
                 
             case 'V':
-                std::cout << "Version: 2.0.0\n";
+                std::cout << "Version: " << std::string(PROJECT_VERSION) << "\n";
                 free(cwd);
                 exit(EXIT_SUCCESS);
                 
