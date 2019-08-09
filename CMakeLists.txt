@@ -69,3 +69,7 @@ TARGET_LINK_LIBRARIES(micolib ${ALL_LIBRARIES} ${ZLIB_LIBRARIES})
 
 ADD_EXECUTABLE(mico src/mico.cxx)
 TARGET_LINK_LIBRARIES(mico micolib)
+
+# testing -  this requires significant amount of rework of the tests
+#ENABLE_TESTING()
+#ADD_SUBDIRECTORY(test)
