@@ -1,4 +1,3 @@
-
 Section of Biomedical Image Analysis
 Department of Radiology
 University of Pennsylvania
@@ -92,24 +91,3 @@ $ ctest -V >& test.log
 
 In the following, only package-specific CMake settings available to
 configure the build and installation of this software are documented.
-
-
-CMake Options
--------------
-
-(no additional CMake options considered by this package)
-
-
-Advanced CMake Options
-----------------------
-
-(no additional advanced CMake options considered by this package)
-
-
-
-REFERENCES
-==========
-
-[1] https://www.med.upenn.edu/sbia/software/basis/
-
-[2] https://www.med.upenn.edu/sbia/software/basis/howto/install/
