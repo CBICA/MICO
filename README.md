@@ -1,4 +1,3 @@
-
 # MICO: Multiplicative Intrinsic Component Optimization
 
 ## Intrduction
@@ -43,7 +42,7 @@ See https://www.med.upenn.edu/sbia/software-agreement.html or COPYING file.
 
 ## Installation
 
-See build and installation instructions given in the INSTALL file.
+See build and installation instructions given in the [INSTALL file](INSTALL.md).
 
 
 ## Documentation

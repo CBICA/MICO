@@ -2,7 +2,7 @@
 
 This document lists the authors of this software and further people who significantly contributed to it.
 
-See the README and COPYING documents for general information, acknowledgements of contributions other kind, and licensing.
+See the [README](README.md) and [COPYING](COPYING.md) documents for general information, acknowledgements of contributions other kind, and licensing.
 
 
 ## Authors
