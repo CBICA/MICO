@@ -38,8 +38,10 @@ including this software, are as follows:
 
 1. Extract source files.
 2. Create build directory and change to it.
-3. Run CMake to configure the build tree.
-4. Build the software using selected build tool.
+3. Run CMake to configure the build tree - the first round configures the build for NIFTICLIB
+3a. Build NIFTICLIB
+4a. Run CMake in the same build location once again - this will configure MICO
+4b. Build the software using selected build tool.
 5. Test the built software.
 6. Install the built files.
 
@@ -48,10 +50,15 @@ summarized by the following sequence of commands executed in a shell,
 where $package and $version are shell variables which represent the name
 of this package and the obtained version of the software.
 
-$ tar xzf $package-$version-source.tar.gz
-$ mkdir $package-$version-build
-$ cd $package-$version-build
-$ ccmake -DBASIS_DIR:PATH=/path/to/basis ../$package-$version-source
+```bash
+tar xzf $package-$version-source.tar.gz
+mkdir $package-$version-build
+cd $package-$version-build
+cmake ../$package-$version-source # the first round is for nifticlib
+make
+cmake ../$package-$version-source # the second round is for mico
+make
+```
 
 - Press 'c' to configure the build system and 'e' to ignore warnings.
 - Set CMAKE_INSTALL_PREFIX and other CMake variables and options.
