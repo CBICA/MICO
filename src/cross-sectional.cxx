@@ -3,9 +3,9 @@
  * @brief Implements MICO for cross-sectional MR brain studies.
  *
  * Copyright (c) 2011, 2012 University of Pennsylvania. All rights reserved.<br />
- * See https://www.med.upenn.edu/sbia/software/license.html or COPYING file.
+ * See http://www.rad.upenn.edu/sbia/software/license.html or COPYING file.
  *
- * Contact: SBIA Group <software at cbica.upenn.edu>
+ * Contact: SBIA Group <sbia-software at uphs.upenn.edu>
  */
 
 #include <math.h>
@@ -14,11 +14,11 @@
 #include <stdio.h>
 #include <string>
 
-//#include <basis/assert.h> // assert(), ASSERT()
-//#include <basis/except.h> // BASIS_THROW, std::invalid_argument
+#include <basis/assert.h> // assert(), ASSERT()
+#include <basis/except.h> // BASIS_THROW, std::invalid_argument
 
-#include "mico/utilities.h"
-#include "mico/cross-sectional.h"
+#include <mico/utilities.h>
+#include <mico/cross-sectional.h>
 
 
 // acceptable in .cxx file
@@ -43,16 +43,10 @@ bool segment_and_bias_correct(Image*            image,
 
     // -------------------------------------------------------------------
     // check arguments
-    if (image == NULL)
-    {
-      std::cerr << "Image is not defined, exiting.\n";
-      abort();
-    }
-    
-    if (memberships == NULL && bcimage == NULL) 
-    {
-      std::cerr << "segment_and_bias_correct(): "
-                << " Neither output parameter is a non-NULL pointer.\n";
+    assert(image != NULL);
+    if (memberships == NULL && bcimage == NULL) {
+        BASIS_THROW(invalid_argument, "segment_and_bias_correct():"
+                << " Neither output parameter is a non-NULL pointer");
     }
 
     // -------------------------------------------------------------------
@@ -245,10 +239,8 @@ Image* create_label_map(const Image*      image,
                         const Parameters& params,
                         int               verbosity)
 {
-    if (memberships.size () != 3) 
-    {
-      std::cerr << "create_label_map(): Expected three membership functions!\n";
-      abort();
+    if (memberships.size () != 3) {
+        BASIS_THROW(invalid_argument, "create_label_map(): Expected three membership functions!");
     }
 
     const unsigned int total = image->region.nx * image->region.ny * image->region.nz;
@@ -256,20 +248,14 @@ Image* create_label_map(const Image*      image,
     ImageMap::const_iterator it_gm  = memberships.find("GM");
     ImageMap::const_iterator it_wm  = memberships.find("WM");
 
-    if (it_csf == memberships.end() || it_csf->second == NULL) 
-    {
-      std::cerr << "create_label_map(): Missing membership function for CSF!\n";
-      abort();
+    if (it_csf == memberships.end() || it_csf->second == NULL) {
+        BASIS_THROW(invalid_argument, "create_label_map(): Missing membership function for CSF!");
     }
-    if (it_wm == memberships.end() || it_wm->second == NULL) 
-    {
-      std::cerr << "create_label_map(): Missing membership function for WM!\n";
-      abort();
+    if (it_wm == memberships.end() || it_wm->second == NULL) {
+        BASIS_THROW(invalid_argument, "create_label_map(): Missing membership function for WM!");
     }
-    if (it_gm == memberships.end() || it_gm->second == NULL) 
-    {
-      std::cerr << "create_label_map(): Missing membership function for GM!\n";
-      abort();
+    if (it_gm == memberships.end() || it_gm->second == NULL) {
+        BASIS_THROW(invalid_argument, "create_label_map(): Missing membership function for GM!");
     }
 
     Image* segmentation = new_image(image->region.nx,

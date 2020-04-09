@@ -3,89 +3,46 @@
 # @brief Root build configuration file.
 #
 # Copyright (c) 2011 University of Pennsylvania. All rights reserved.<br />
-# See https://www.med.upenn.edu/sbia/software/license.html or COPYING file.
+# See http://www.rad.upenn.edu/sbia/software/license.html or COPYING file.
 #
-# Contact: SBIA Group <software at cbica.upenn.edu>
+# Contact: SBIA Group <sbia-software at uphs.upenn.edu>
 ##############################################################################
 
 # ----------------------------------------------------------------------------
 # minimum required CMake version
-cmake_minimum_required (VERSION 3.0)
+cmake_minimum_required (VERSION 2.8.4)
 
-PROJECT( MICO )
-SET( PROJECT_VERSION_MAJOR 2 )
-SET( PROJECT_VERSION_MINOR 0 )
-SET( PROJECT_VERSION_PATCH 0 )
-SET( PROJECT_VERSION_TWEAK )
-SET( PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}" CACHE STRING "The project version" FORCE )
-ADD_DEFINITIONS(-DPROJECT_VERSION="${PROJECT_VERSION}" )
+# ----------------------------------------------------------------------------
+# version of BASIS template used by this project
+set (TEMPLATE_VERSION 1.5)
 
-SET(CMAKE_CONFIGURATION_TYPES "Release" CACHE STRING "Default configuration types" FORCE)
+# ----------------------------------------------------------------------------
+# include BASIS policies, settings, macros, and functions
 
-SET(CMAKE_CXX_STANDARD 11 CACHE STRING "C++ standard to be used" )
-SET(CMAKE_CXX_STANDARD_REQUIRED YES) 
+# circumvent issue with CMake's find_package() interpreting these variables
+# relative to the current binary directory instead of the top-level directory
+if (BASIS_DIR AND NOT IS_ABSOLUTE "${BASIS_DIR}")
+  set (BASIS_DIR "${CMAKE_BINARY_DIR}/${BASIS_DIR}")
+  get_filename_component (BASIS_DIR "${BASIS_DIR}" ABSOLUTE)
+endif ()
+# moreover, users tend to specify the installation prefix instead of the
+# actual directory containing the package configuration file
+if (IS_DIRECTORY "${BASIS_DIR}")
+  list (INSERT CMAKE_PREFIX_PATH 0 "${BASIS_DIR}")
+endif ()
+# if BASIS is not found, set CMAKE_INSTALL_PREFIX to invalid value if not
+# set explicitly at the command-line such that BASIS will still initialize
+# it to its defaults even though already cached
+find_package (BASIS)
+if (NOT BASIS_FOUND)
+  if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+    set (CMAKE_INSTALL_PREFIX "" CACHE INTERNAL "Installation prefix." FORCE)
+  endif ()
+  message (FATAL_ERROR "BASIS not found! Please specify installation directory"
+                       " of BASIS or the location of the BASISConfig.cmake file"
+                       " using the BASIS_DIR variable.")
+endif ()
 
-IF(NOT EXISTS "${PROJECT_BINARY_DIR}/ep/include/nifti")
-
-  PROJECT(${PROJECT_NAME}_Depends)
-
-  IF( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
-    SET( CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/ep CACHE PATH "Changed the default install path" FORCE )
-  ENDIF( )
-  INCLUDE(ExternalProject)
-  
-  FIND_PACKAGE(ZLIB)
-
-  ExternalProject_Add( 
-    NIFTICLIB
-    UPDATE_COMMAND ""
-    PATCH_COMMAND ""
-    SOURCE_DIR ${PROJECT_SOURCE_DIR}/thirdparty/nifticlib
-    BINARY_DIR thirdparty/nifticlib_build
-    UPDATE_COMMAND ""
-    PATCH_COMMAND ""
-    #INSTALL_COMMAND ""
-    #INSTALL_COMMAND make install
-    # INSTALL_COMMAND make install/strip
-    CMAKE_GENERATOR ${gen}
-    CMAKE_ARGS
-      ${ep_common_args}   
-      -DCMAKE_DEBUG_POSTFIX:STRING=d
-      -DBUILD_TESTING:BOOL=OFF # testing the ITK build is not required
-      -DCMAKE_INSTALL_PREFIX:PATH=${PROJECT_BINARY_DIR}/ep
-      -DBUILD_SHARED_LIBS:BOOL=OFF
-  )
-
- RETURN()
-ENDIF()
-
-FIND_PACKAGE(ZLIB)
-
-IF( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
-SET( CMAKE_INSTALL_PREFIX ${PROJECT_BINARY_DIR}/install CACHE PATH "Changed the default install path" FORCE )
-ENDIF( )
-
-# at this point, the dependencies are ready
-FILE( GLOB_RECURSE ALL_LIBRARIES "${PROJECT_BINARY_DIR}/ep/lib/*" )
-INCLUDE_DIRECTORIES(
-  ${PROJECT_BINARY_DIR}/ep/include
-  ${PROJECT_BINARY_DIR}/ep/include/nifti
-  include
-)
-
-ADD_LIBRARY(micolib STATIC src/utilities.cxx src/cross-sectional.cxx src/longitudinal.cxx src/io.cxx src/cbicaUtilities.cpp)
-SET_TARGET_PROPERTIES(micolib PROPERTIES OUTPUT_NAME mico)
-TARGET_LINK_LIBRARIES(micolib ${ALL_LIBRARIES} ${ZLIB_LIBRARIES})
-
-ADD_EXECUTABLE(mico src/mico.cxx)
-TARGET_LINK_LIBRARIES(mico micolib)
-
-INSTALL(
-  TARGETS mico 
-  DESTINATION bin
-  PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-)
-
-# testing -  this requires significant amount of rework of the tests
-#ENABLE_TESTING()
-#ADD_SUBDIRECTORY(test)
+# ----------------------------------------------------------------------------
+# configure build system
+basis_project_impl ()

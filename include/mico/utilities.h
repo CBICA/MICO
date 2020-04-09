@@ -3,17 +3,15 @@
  * @brief Utility functions for MICO.
  *
  * Copyright (c) 2011, 2012 University of Pennsylvania. All rights reserved.<br />
- * See https://www.med.upenn.edu/sbia/software/license.html or COPYING file.
+ * See http://www.rad.upenn.edu/sbia/software/license.html or COPYING file.
  *
- * Contact: SBIA Group <software at cbica.upenn.edu>
+ * Contact: SBIA Group <sbia-software at uphs.upenn.edu>
  */
 
 #pragma once
 #ifndef _MICO_UTILITIES_H
 #define _MICO_UTILITIES_H
 
-#include <iostream>
-#include <set>
 
 #include <nifti1_io.h>
 

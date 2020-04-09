@@ -3,9 +3,9 @@
  * @brief I/O functions.
  *
  * Copyright (c) 2011, 2012 University of Pennsylvania. All rights reserved.<br />
- * See https://www.med.upenn.edu/sbia/software/license.html or COPYING file.
+ * See http://www.rad.upenn.edu/sbia/software/license.html or COPYING file.
  *
- * Contact: SBIA Group <software at cbica.upenn.edu>
+ * Contact: SBIA Group <sbia-software at uphs.upenn.edu>
  */
 
 #include <string>
@@ -13,15 +13,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//#include <basis/os/path.h> // dirname(), normpath()
+#include <basis/os/path.h> // dirname(), normpath()
 
-#include "mico/io.h"
+#include <mico/io.h>
 
-#include "cbicaUtilities.h"
 
 // acceptable in .cxx file
 using namespace std;
-//using namespace basis;
+using namespace basis;
 
 
 namespace mico {
@@ -105,7 +104,7 @@ int read_image_file_names(const char* listfile, char*** filenames)
     if (fp == NULL) return -1; // indicates list file open error
 
     // directory of list file
-    string root = cbica::getFilenamePath(listfile);
+    string root    = os::path::dirname(listfile);
     int    lenroot = static_cast<int>(root.size());
 
     // read list line by line
@@ -134,7 +133,7 @@ int read_image_file_names(const char* listfile, char*** filenames)
         }
         hname[hlen] = '\0';
         // normalize file path
-        string tmp = cbica::normPath(hname);
+        string tmp = os::path::normpath(hname);
         strncpy(hname, tmp.c_str(), hlen);
         // add file name to output list
         (*filenames)[n] = hname;

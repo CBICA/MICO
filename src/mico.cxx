@@ -7,9 +7,9 @@
  * longitudinal MR brain series images.
  *
  * Copyright (c) 2011, 2012 University of Pennsylvania. All rights reserved.<br />
- * See https://www.med.upenn.edu/sbia/software/license.html or COPYING file.
+ * See http://www.rad.upenn.edu/sbia/software/license.html or COPYING file.
  *
- * Contact: SBIA Group <software at cbica.upenn.edu>
+ * Contact: SBIA Group <sbia-software at uphs.upenn.edu>
  */
 
 
@@ -21,14 +21,12 @@
 
 #include <mico/mico.h>
 
-#include "cbicaUtilities.h"
-
-// #include <mico/basis.h> // print_contact(), print_version()
+#include <mico/basis.h> // print_contact(), print_version()
 
 
 // acceptable in .cxx file
 using namespace std;
-// using namespace basis;
+using namespace basis;
 using namespace mico;
 
 
@@ -191,7 +189,7 @@ void print_help()
     printf("    Bias corrects the MR brain image brain.hdr/brain.img and writes the resulting\n");
     printf("    bias corrected image to the compressed file brain_bc.nii.gz.\n");
     printf("\n");
-    std::cout << "Contact software@cbica.upenn.edu";
+    print_contact();
 }
 
 /**
@@ -204,7 +202,7 @@ void print_usage()
     printf("\n");
     print_options();
     printf("\n");
-    std::cout << "Contact software@cbica.upenn.edu";
+    print_contact();
 }
 
 // ===========================================================================
@@ -217,7 +215,7 @@ string get_suffix_with_extension(const char* suffix, const char* extension)
     string suffix_out(suffix);
     // if an explicit extension is given (--hdr and --nii options) and the
     // suffix itself does not have a valid extension...
-    std::set<string> niftiexts;
+    set<string> niftiexts;
     niftiexts.insert(".hdr");
     niftiexts.insert(".hdr.gz");
     niftiexts.insert(".img");
@@ -227,7 +225,7 @@ string get_suffix_with_extension(const char* suffix, const char* extension)
     niftiexts.insert(".nia");
     niftiexts.insert(".nia.gz");
     // append extension to suffix
-    if (extension /*&& !os::path::hasext(suffix, &niftiexts)*/) suffix_out += extension;
+    if (extension && !os::path::hasext(suffix, &niftiexts)) suffix_out += extension;
     // use .hdr instead of .img
     if (suffix_out.length() >= 4 && suffix_out.substr(suffix_out.length() - 4) == ".img") {
         suffix_out.replace(suffix_out.length() - 4, 4, ".hdr");
@@ -270,7 +268,7 @@ string replace_release(const char* str)
     while (true) {
         size_t pos = text.find("<RELEASE>");
         if (pos != string::npos) {
-            text.replace(pos, 9, "RELEASE");
+            text.replace(pos, 9, RELEASE);
             continue;
         }
         break;
@@ -375,7 +373,7 @@ int main3D(char** filenames, int number_of_images, const Parameters& params, int
         // write results
 
         // build common path prefix for output images
-        string prefix  = params.outputDir.empty() ? cbica::constCharToChar(cbica::getCWD()) : params.outputDir;
+        string prefix  = params.outputDir.empty() ? getcwd(NULL, 0) : params.outputDir;
         prefix        += '/';
         prefix        += image->name;
         // write segmentation image
@@ -533,7 +531,7 @@ int main4D(char** filenames, int number_of_images, const Parameters& params, int
     if (ok) {
         for (int i = 0; i < number_of_images; i++) {
             // build common path prefix for output images
-            string prefix  = params.outputDir.empty() ? cbica::constCharToChar(cbica::getCWD()) : params.outputDir;
+            string prefix  = params.outputDir.empty() ? getcwd(NULL, 0) : params.outputDir;
             prefix        += '/';
             prefix        += images[i]->name;
 
@@ -627,7 +625,7 @@ int main(int argc, char* argv[])
     }
 
     // get current working directory - used to make file paths absolute
-    char* cwd    = cbica::constCharToChar(cbica::getCWD());
+    char* cwd    = getcwd(NULL, 0);
     int   lencwd = strlen(cwd);
 
     // -----------------------------------------------------------------------
@@ -739,8 +737,7 @@ int main(int argc, char* argv[])
                     } else if (strncmp(long_options[oi].name, "suffix", 20) == 0) {
                         suffix = optarg;
                     } else {
-                      std::cerr << "Invalid long option associated with 's': " << long_options[oi].name << "\n";
-                      abort();
+                        ASSERT(false, "Invalid long option associated with 's': " << long_options[oi].name);
                     }
                 } else {
                     suffix = optarg;
@@ -763,8 +760,7 @@ int main(int argc, char* argv[])
                 else if (strncmp(long_options[oi].name, "zn2", 6) == 0) extension = ".hdr.gz";
                 else if (strncmp(long_options[oi].name, "zn1", 6) == 0) extension = ".nii.gz";
                 else {
-                  std::cerr << "Invalid long option associated with 'F': " << long_options[oi].name << "\n";
-                  abort();
+                    ASSERT(false, "Invalid long option associated with 'F': " << long_options[oi].name);
                 }
                 break;
 
@@ -777,7 +773,7 @@ int main(int argc, char* argv[])
                 break;
                 
             case 'V':
-                std::cout << "Version: " << std::string(PROJECT_VERSION) << "\n";
+                print_version("mico");
                 free(cwd);
                 exit(EXIT_SUCCESS);
                 
@@ -933,7 +929,10 @@ int main(int argc, char* argv[])
 
     // -----------------------------------------------------------------------
     // create output directory (if non-existent)
-    cbica::createDir(params.outputDir);
+    if (!os::makedirs(params.outputDir)) {
+        fprintf(stderr, "Could not create output directory!");
+        exit(EXIT_FAILURE);
+    }
  
     // -----------------------------------------------------------------------
     // perform segmentation

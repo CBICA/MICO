@@ -1,7 +1,0 @@
-# Binaries, binary folders
-
-binaries_*
-
-bin
-build
-bin_gcc

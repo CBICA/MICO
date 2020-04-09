@@ -3,9 +3,9 @@
  * @brief Implements MICO for longitudinal MR brain image series.
  *
  * Copyright (c) 2011, 2012 University of Pennsylvania. All rights reserved.<br />
- * See https://www.med.upenn.edu/sbia/software/license.html or COPYING file.
+ * See http://www.rad.upenn.edu/sbia/software/license.html or COPYING file.
  *
- * Contact: SBIA Group <software at cbica.upenn.edu>
+ * Contact: SBIA Group <sbia-software at uphs.upenn.edu>
  */
 
 #include <time.h>
@@ -15,11 +15,11 @@
 #include <stdio.h>
 #include <string>
 
-//#include <basis/assert.h>
+#include <basis/assert.h>
 
-#include "mico/utilities.h"
-#include "mico/cross-sectional.h"
-#include "mico/longitudinal.h"
+#include <mico/utilities.h>
+#include <mico/cross-sectional.h>
+#include <mico/longitudinal.h>
 
 
 // acceptable in .cxx file
@@ -244,13 +244,8 @@ ImageMapVector tc_update_membership(const ImageVector& images,
 
     const int number_of_images = static_cast<int>(images.size());
 
-  if (number_of_images <= 0)
-  {
-    std::cerr << "Number of images is less than or equal to 0, something went wrong.\n";
-    exit(EXIT_FAILURE);
-  }
-  
-    // assert(result_ser != NULL);
+    assert(number_of_images > 0);
+    assert(result_ser != NULL);
 
     const int width  = images[0]->hdr.dim[1];
     const int height = images[0]->hdr.dim[2];
@@ -272,15 +267,9 @@ ImageMapVector tc_update_membership(const ImageVector& images,
     if (ok) {
         float* img;
         float* result;
-        for (int i = 0; i < number_of_images; i++) 
-        {
-          
-          if (images[i]->hdr.datatype != DT_FLOAT)
-          {
-            std::cerr << "Data type is not float.\n";
-            exit(EXIT_FAILURE);
-          }
-            // assert(result_ser[i] != NULL);
+        for (int i = 0; i < number_of_images; i++) {
+            assert(images[i]->hdr.datatype == DT_FLOAT);
+            assert(result_ser[i] != NULL);
             float* Rs_i = Rs[i];
             // CSF
             img    = images[i]->img.fl;
@@ -373,7 +362,7 @@ ImageMapVector tc_update_membership(const ImageVector& images,
             if      (k == 0) M = memberships[i]["CSF"]->img.fl;
             else if (k == 1) M = memberships[i]["GM"] ->img.fl;
             else if (k == 2) M = memberships[i]["WM"] ->img.fl;
-            // assert (M != NULL);
+            assert (M != NULL);
             for (int j = 0; j < total; j++) {
                 if (result_ser[i][j] != 0) {
                     M[j] = f[k * total + j] / f_sum[j];
