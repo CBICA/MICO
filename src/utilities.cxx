@@ -548,14 +548,14 @@ nifti_image* convert_to_nifti(Image* image, const char* fname, bool copy)
     niftiexts.insert(".nii.gz");
     niftiexts.insert(".nia");
     niftiexts.insert(".nia.gz");
-//    auto it = analyzeexts.find(cbica::getFilenameExtension(nim->fname));
-//    if (it != analyzeexts.end())
-//    {
-//      std::cout << "'at' found in set" << std::endl;
-//    }
-//    if ((it != analyzeexts.end()) && image->nifti_type == NIFTI_FTYPE_ANALYZE) {
-//        nim->nifti_type = NIFTI_FTYPE_ANALYZE;
-//    }
+    auto it = analyzeexts.find(cbica::getFilenameExtension(nim->fname,false)); //'false' ensures that getFilenameExtension doesn't fail because the output file doesn't exist yet
+    if (it != analyzeexts.end())
+    {
+      std::cout << "'at' found in set" << std::endl;
+    }
+    if ((it != analyzeexts.end()) && image->nifti_type == NIFTI_FTYPE_ANALYZE) {
+        nim->nifti_type = NIFTI_FTYPE_ANALYZE;
+    }
     // set image data of NIfTI image
     if (copy) {
         size_t nbytes = image->hdr.dim[1] * image->hdr.dim[2] * image->hdr.dim[3] * (image->hdr.bitpix / 8);
