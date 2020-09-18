@@ -3,9 +3,9 @@
  * @brief Utility functions for MICO.
  *
  * Copyright (c) 2011, 2012 University of Pennsylvania. All rights reserved.<br />
- * See http://www.rad.upenn.edu/sbia/software/license.html or COPYING file.
+ * See https://www.med.upenn.edu/sbia/software/license.html or COPYING file.
  *
- * Contact: SBIA Group <sbia-software at uphs.upenn.edu>
+ * Contact: SBIA Group <software at cbica.upenn.edu>
  */
 
 #include <stdlib.h>
@@ -13,17 +13,18 @@
 #include <math.h>
 #include <nifti1_io.h>
 #include <limits>
+#include <set>
 
-#include <basis/assert.h> // assert(), ASSERT()
-#include <basis/except.h> // BASIS_THROW(), std::invalid_argument
-#include <basis/os.h>     // hasext()
+// #include <basis/assert.h> // assert(), ASSERT()
+// #include <basis/except.h> // BASIS_THROW(), std::invalid_argument
+// #include <basis/os.h>     // hasext()
 
-#include <mico/utilities.h>
-
+#include "mico/utilities.h"
+#include "cbicaUtilities.h"
 
 // acceptable in .cxx file
 using namespace std;
-using namespace basis;
+//using namespace basis;
 
 
 namespace mico {
@@ -237,7 +238,7 @@ void copy_image_data(Image*             image_out,
                                lmin, lmax, slope, inter);
                 break;
             default:
-                ASSERT(false, "Invalid image datatype: " << image_in->hdr.datatype);
+              std::cerr << "Invalid image datatype: " << image_in->hdr.datatype << "\n";
                 abort();
         }
     }
@@ -259,7 +260,7 @@ void copy_image_data(Image*             image_out,
                                 slope, inter);
             break;
         default:
-            ASSERT(false, "Invalid image datatype: " << image_in->hdr.datatype);
+            std::cerr << "Invalid image datatype: " << image_in->hdr.datatype << "\n";
             abort();
     }
     // set scl_slope and scl_inter of output image
@@ -451,7 +452,9 @@ Image* convert_nifti_image(nifti_image* nim, short datatype, bool delnim)
 
     string fext;
     string fbase;
-    os::path::splitext(nim->fname, fbase, fext, &niftiexts);
+    string fpath;
+    //os::path::splitext(nim->fname, fbase, fext, &niftiexts);
+    cbica::splitFileName(nim->fname, fpath, fbase, fext);
 
     Image image_in;
     image_in.hdr        = nifti_convert_nim2nhdr(nim);
@@ -463,7 +466,7 @@ Image* convert_nifti_image(nifti_image* nim, short datatype, bool delnim)
     image_in.region.nz  = nim->nz;
     image_in.img.fl     = reinterpret_cast<float*>(nim->data);
     image_in.owns_img   = false;
-    image_in.name       = os::path::basename(fbase);
+    image_in.name       = fbase/* os::path::basename(fbase)*/;
     image_in.compress   = (fext == ".gz");
     image_in.nifti_type = nim->nifti_type;
 
@@ -480,9 +483,10 @@ Image* convert_nifti_image(nifti_image* nim, short datatype, bool delnim)
     if      (datatype == DT_UNSIGNED_CHAR) image->hdr.bitpix = 8 * sizeof(unsigned char);
     else if (datatype == DT_SIGNED_SHORT)  image->hdr.bitpix = 8 * sizeof(short);
     else if (datatype == DT_FLOAT)         image->hdr.bitpix = 8 * sizeof(float);
-    else {
-        ASSERT(false, "Check implementation of new_image()! It should have returned NULL!");
-        abort();
+    else 
+    {
+      std::cerr << "Check implementation of new_image()! It should have returned NULL!\n";
+      exit(EXIT_FAILURE);
     }
 
     // remember original nifti_type
@@ -544,7 +548,12 @@ nifti_image* convert_to_nifti(Image* image, const char* fname, bool copy)
     niftiexts.insert(".nii.gz");
     niftiexts.insert(".nia");
     niftiexts.insert(".nia.gz");
-    if (os::path::hasext(nim->fname, &analyzeexts) && image->nifti_type == NIFTI_FTYPE_ANALYZE) {
+    auto it = analyzeexts.find(cbica::getFilenameExtension(nim->fname,false)); //'false' ensures that getFilenameExtension doesn't fail because the output file doesn't exist yet
+    if (it != analyzeexts.end())
+    {
+      std::cout << "'at' found in set" << std::endl;
+    }
+    if ((it != analyzeexts.end()) && image->nifti_type == NIFTI_FTYPE_ANALYZE) {
         nim->nifti_type = NIFTI_FTYPE_ANALYZE;
     }
     // set image data of NIfTI image
@@ -671,8 +680,7 @@ void get_intensity_range(const Image* image, float& min, float& max, bool scale)
                         min, max);
             break;
         default:
-            BASIS_THROW(invalid_argument,
-                    "Invalid image datatype: " << image->hdr.datatype);
+          std::cout << "Invalid image datatype: " << image->hdr.datatype;
     }
     if (scale && image->hdr.scl_slope != 0) {
         min = min * image->hdr.scl_slope + image->hdr.scl_inter;
