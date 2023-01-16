@@ -55,11 +55,10 @@ BUILDING THE SOFTWARE FROM SOURCES
 
   The following software has to be installed (if not optional).
 
-  - BASIS >= 2.0
+  - BASIS = 2.1.4
 
-    Web Site: http://www.rad.upenn.edu/sbia/software/basis/
-    Download: http://www.rad.upenn.edu/sbia/software/distributions/basis-current-source.tar.gz
-
+    Web Site: https://github.com/CBICA/basis/tree/2.1.4
+ 
     This project is based on BASIS, a meta-project developed at SBIA to
     standardize and simplify the software development.
 
